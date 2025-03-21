@@ -17,17 +17,14 @@ class ArtworkController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    // app/Http/Controllers/ArtworkController.php
+public function create()
+{
+    $categories = Category::all();
+    return view('artworks.create', compact('categories'));
+}
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
         'title' => 'required|string|max:255',
@@ -40,7 +37,7 @@ class ArtworkController extends Controller
         'category_id' => 'required|exists:categories,id',
     ]);
 
-    $artwork = new Artwork($request->all());
+    $artwork = new Artwork($request->except('photo'));
 
     if ($request->hasFile('photo')) {
         $image = $request->file('photo');
@@ -52,9 +49,8 @@ class ArtworkController extends Controller
 
     $artwork->save();
 
-    return redirect()->route('artworks.index')->with('success', 'Artwork created successfully.');
+    return redirect()->route('artworks.index')->with('success', 'Œuvre ajoutée avec succès.');
 }
-    }
 
     /**
      * Display the specified resource.
